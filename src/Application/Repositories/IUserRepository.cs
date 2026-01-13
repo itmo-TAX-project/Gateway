@@ -1,12 +1,12 @@
-﻿using Infrastructure.Models;
+﻿using Application.Models;
 
-namespace Infrastructure.Db.Persistence;
+namespace Application.Repositories;
 
 public interface IUserRepository
 {
-    Task<bool> AddUserAsync(User account, CancellationToken cancellationToken);
-    
+    Task<bool> AddUserAsync(User user, CancellationToken cancellationToken);
+
     Task UpdateUserAsync(User user, CancellationToken cancellationToken);
-    
+
     Task<User?> GetUserAsync(string name, CancellationToken cancellationToken);
 }

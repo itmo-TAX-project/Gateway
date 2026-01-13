@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace Infrastructure.Db.Migrations;
+namespace Infrastructure.Database.Migrations;
 
 [Migration(001)]
 public class Initial : Migration
