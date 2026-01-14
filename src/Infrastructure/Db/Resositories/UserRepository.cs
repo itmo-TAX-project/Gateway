@@ -32,9 +32,9 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
     {
         const string sql = """
                            update users set
-                           users_name=:name,
                            users_password=:phone,
-                           users_role=:role,
+                           users_role=:role
+                           where (user_name=:name);
                            """;
         
         await using NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken);

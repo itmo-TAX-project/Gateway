@@ -44,7 +44,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task<bool> RegisterDriverAsync(string name, string phone, string password, CancellationToken cancellationToken)
+    public async Task<bool> RegisterDriverAsync(string name, string phone, string password, string licenseNumber, CancellationToken cancellationToken)
     {
         var hasher = new PasswordHasher<User>();
         var user = new User(name, UserRole.Driver);
@@ -53,7 +53,7 @@ public class UserService : IUserService
         var result = await _userRepository.AddUserAsync(user, cancellationToken);
         if (!result) return false;
         var messageKey = new AccountCreatedMessageKey();
-        var messageValue = new AccountCreatedMessageValue(name, phone, UserRole.Passenger);
+        var messageValue = new AccountCreatedMessageValue(name, phone, UserRole.Driver, licenseNumber);
 
         var message = new KafkaProducerMessage<AccountCreatedMessageKey, AccountCreatedMessageValue>(messageKey, messageValue);
         var messageListAsync = AsyncEnumerableEx.Return(message);
