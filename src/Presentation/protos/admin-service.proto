@@ -1,0 +1,44 @@
+﻿syntax = "proto3";
+
+package admin.master;
+
+option csharp_namespace = "AdminMaster.Grpc";
+
+service AdminService {
+  rpc BanAccount(BanAccountRequest) returns (BanAccountResponse);
+  rpc UnbanAccount(UnbanAccountRequest) returns (UnbanAccountResponse);
+  rpc ApproveRefund(ApproveRefundRequest) returns (ApproveRefundResponse);
+  rpc RejectRefund(RejectRefundRequest) returns (RejectRefundResponse);
+}
+
+message BanAccountRequest {
+  int64 subject_account_id = 1;
+  int64 created_by_admin_id = 2;
+}
+
+message BanAccountResponse {
+}
+
+message UnbanAccountRequest {
+  int64 subject_account_id = 1;
+  int64 created_by_admin_id = 2;
+}
+
+message UnbanAccountResponse {
+}
+
+message ApproveRefundRequest {
+  int64 refund_request_id = 1;
+  int64 created_by_admin_id = 2;
+}
+
+message ApproveRefundResponse {
+}
+
+message RejectRefundRequest {
+  int64 refund_request_id = 1;
+  int64 created_by_admin_id = 2;
+}
+
+message RejectRefundResponse {
+}
