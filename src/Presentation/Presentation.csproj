@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" />
-        <PackageReference Include="Grpc.Core" />
+        <PackageVersion Include="Grpc.AspNetCore" />
+        <PackageVersion Include="Grpc.Core" />
         <PackageReference Include="Google.Api.CommonProtos" />
         <PackageReference Include="Google.Api.Gax.Grpc" />
         <PackageReference Include="Google.Protobuf" />
