@@ -38,6 +38,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("login")]
     public async Task<ActionResult<string>> Login(AuthRequest request)
     {
         string response = await _userService.LoginAsync(request.Name, request.Password, default);
