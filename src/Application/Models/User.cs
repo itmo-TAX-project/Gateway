@@ -11,4 +11,6 @@ public class User
     public string PhoneNumber { get; set; } = string.Empty;
 
     public UserRole Role { get; set; }
+
+    public string? LicenseNumber { get; set; } = null;
 }

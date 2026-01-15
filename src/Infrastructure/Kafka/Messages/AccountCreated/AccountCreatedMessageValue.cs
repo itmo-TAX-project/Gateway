@@ -2,4 +2,4 @@
 
 namespace Infrastructure.Kafka.Messages.AccountCreated;
 
-public record AccountCreatedMessageValue(string Name, string Phone, UserRole Role);
+public record AccountCreatedMessageValue(string Name, string Phone, UserRole Role, string? LicenseNumber);

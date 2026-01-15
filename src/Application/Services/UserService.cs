@@ -55,10 +55,30 @@ public class UserService : IUserService
         return true;
     }
 
+    public async Task<bool> RegisterAdminAsync(string name, string phone, string password, CancellationToken cancellationToken)
+    {
+        var user = new User
+        {
+            Name = name,
+            PhoneNumber = phone,
+            Role = UserRole.Admin,
+            Password = password,
+        };
+        user.Password = _userPasswordHasher.HashUserPassword(user, password);
+
+        bool result = await _userRepository.AddUserAsync(user, cancellationToken);
+        if (!result) return false;
+
+        await _userProducer.ProduceUserAsync(user, cancellationToken);
+
+        return true;
+    }
+
     public async Task<bool> RegisterDriverAsync(
         string name,
         string phone,
         string password,
+        string licenseNumber,
         CancellationToken cancellationToken)
     {
         var user = new User
@@ -67,6 +87,7 @@ public class UserService : IUserService
             PhoneNumber = phone,
             Role = UserRole.Driver,
             Password = password,
+            LicenseNumber = licenseNumber,
         };
         user.Password = _userPasswordHasher.HashUserPassword(user, password);
 

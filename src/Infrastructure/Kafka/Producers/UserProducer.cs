@@ -18,7 +18,7 @@ public class UserProducer : IUserProducer
     public async Task ProduceUserAsync(User user, CancellationToken cancellationToken)
     {
         var messageKey = new AccountCreatedMessageKey();
-        var messageValue = new AccountCreatedMessageValue(user.Name, user.PhoneNumber, user.Role);
+        var messageValue = new AccountCreatedMessageValue(user.Name, user.PhoneNumber, user.Role, user.LicenseNumber);
 
         var kafkaMessage = new KafkaProducerMessage<AccountCreatedMessageKey, AccountCreatedMessageValue>(
             messageKey,
