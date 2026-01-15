@@ -1,10 +1,10 @@
 ﻿using Application.Contracts;
-using Application.Kafka.Messages.AccountCreated;
-using Confluent.Kafka;
-using Infrastructure.Db.Persistence;
-using Infrastructure.Models;
-using Infrastructure.Security;
-using Itmo.Dev.Platform.Kafka.Producer;
+using Application.Generators;
+using Application.Models;
+using Application.Models.Enums;
+using Application.PasswordHashers;
+using Application.Producers;
+using Application.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,68 +12,86 @@ namespace Application.Services;
 
 public class UserService : IUserService
 {
-    private JwtGenerator _jwtGenerator;
-    
+    private readonly IJwtGenerator _jwtGenerator;
+
     private readonly IUserRepository _userRepository;
 
-    private readonly IKafkaMessageProducer<AccountCreatedMessageKey, AccountCreatedMessageValue> _producer;
+    private readonly IUserProducer _userProducer;
 
-    public UserService(IUserRepository userRepository, JwtGenerator jwtGenerator, IKafkaMessageProducer<AccountCreatedMessageKey, AccountCreatedMessageValue> producer)
+    private readonly IUserPasswordHasher _userPasswordHasher;
+
+    public UserService(
+        IUserRepository userRepository,
+        IJwtGenerator jwtGenerator,
+        IUserProducer userProducer,
+        IUserPasswordHasher userPasswordHasher)
     {
         _userRepository = userRepository;
         _jwtGenerator = jwtGenerator;
-        _producer = producer;
+        _userProducer = userProducer;
+        _userPasswordHasher = userPasswordHasher;
     }
-    
-    public async Task<bool> RegisterPassengerAsync(string name, string phone, string password, CancellationToken cancellationToken)
+
+    public async Task<bool> RegisterPassengerAsync(
+        string name,
+        string phone,
+        string password,
+        CancellationToken cancellationToken)
     {
-        var hasher = new PasswordHasher<User>();
-        var user = new User(name, UserRole.Passenger);
-        user.Password = hasher.HashPassword(user, password);
-        
-        var result = await _userRepository.AddUserAsync(user, cancellationToken);
+        var user = new User
+        {
+            Name = name,
+            PhoneNumber = phone,
+            Role = UserRole.Passenger,
+            Password = password,
+        };
+        user.Password = _userPasswordHasher.HashUserPassword(user, password);
+
+        bool result = await _userRepository.AddUserAsync(user, cancellationToken);
         if (!result) return false;
-        var messageKey = new AccountCreatedMessageKey();
-        var messageValue = new AccountCreatedMessageValue(name, phone, UserRole.Passenger);
 
-        var message = new KafkaProducerMessage<AccountCreatedMessageKey, AccountCreatedMessageValue>(messageKey, messageValue);
-        var messageListAsync = AsyncEnumerableEx.Return(message);
-            
-        await _producer.ProduceAsync(messageListAsync, cancellationToken);
+        await _userProducer.ProduceUserAsync(user, cancellationToken);
+
         return true;
-
     }
 
-    public async Task<bool> RegisterDriverAsync(string name, string phone, string password, string licenseNumber, CancellationToken cancellationToken)
+    public async Task<bool> RegisterDriverAsync(
+        string name,
+        string phone,
+        string password,
+        CancellationToken cancellationToken)
     {
-        var hasher = new PasswordHasher<User>();
-        var user = new User(name, UserRole.Driver);
-        user.Password = hasher.HashPassword(user, password);
-        
-        var result = await _userRepository.AddUserAsync(user, cancellationToken);
+        var user = new User
+        {
+            Name = name,
+            PhoneNumber = phone,
+            Role = UserRole.Driver,
+            Password = password,
+        };
+        user.Password = _userPasswordHasher.HashUserPassword(user, password);
+
+        bool result = await _userRepository.AddUserAsync(user, cancellationToken);
         if (!result) return false;
-        var messageKey = new AccountCreatedMessageKey();
-        var messageValue = new AccountCreatedMessageValue(name, phone, UserRole.Driver, licenseNumber);
 
-        var message = new KafkaProducerMessage<AccountCreatedMessageKey, AccountCreatedMessageValue>(messageKey, messageValue);
-        var messageListAsync = AsyncEnumerableEx.Return(message);
-            
-        await _producer.ProduceAsync(messageListAsync, cancellationToken);
+        await _userProducer.ProduceUserAsync(user, cancellationToken);
+
         return true;
-
     }
 
-    public async Task<string> LoginAsync(string name, string password, CancellationToken cancellationToken)
+    public async Task<string> LoginAsync(
+        string name,
+        string password,
+        CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserAsync(name, cancellationToken);
+        User? user = await _userRepository.GetUserAsync(name, cancellationToken);
         if (user == null)
         {
-            return string.Empty;
+            throw new NullReferenceException("User not found");
         }
-        var hasher = new PasswordHasher<User>();
 
-        var result = hasher.VerifyHashedPassword(user, user.Password, password);
-        return result == PasswordVerificationResult.Success ? _jwtGenerator.GenerateJwtToken(user) 
+        PasswordVerificationResult result = _userPasswordHasher.VerifyHashedUserPassword(user, user.Password, password);
+        return result == PasswordVerificationResult.Success ?
+            _jwtGenerator.GenerateJwtToken(user)
             : throw new AuthenticationFailureException("Login failed.");
     }
 }

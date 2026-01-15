@@ -7,12 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Itmo.Dev.Platform.Kafka" />
-      <PackageReference Include="System.Linq.Async" />
+      <Reference Include="Microsoft.Extensions.Identity.Core">
+        <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\10.0.1\Microsoft.Extensions.Identity.Core.dll</HintPath>
+      </Reference>
     </ItemGroup>
-
+    
 </Project>

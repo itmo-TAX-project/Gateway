@@ -7,10 +7,21 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Application\Application.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <PackageReference Include="FluentMigrator" />
       <PackageReference Include="FluentMigrator.Runner" />
+      <PackageReference Include="Itmo.Dev.Platform.Kafka" />
+      <PackageReference Include="Itmo.Dev.Platform.MessagePersistence" />
+      <PackageReference Include="Itmo.Dev.Platform.MessagePersistence.Postgres" />
+      <PackageReference Include="Itmo.Dev.Platform.Persistence.Abstractions" />
+      <PackageReference Include="Itmo.Dev.Platform.Persistence.Postgres" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" />
+      <PackageReference Include="Npgsql" />
     </ItemGroup>
 
 </Project>

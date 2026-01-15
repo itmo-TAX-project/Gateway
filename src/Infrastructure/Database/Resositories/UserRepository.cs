@@ -1,14 +1,15 @@
-﻿using Infrastructure.Db.Persistence;
-using Infrastructure.Models;
+﻿using Application.Models;
+using Application.Models.Enums;
+using Application.Repositories;
 using Npgsql;
 using NpgsqlTypes;
 
-namespace Infrastructure.Db.Resositories;
+namespace Infrastructure.Database.Resositories;
 
 public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
 {
     private readonly NpgsqlDataSource _dataSource = dataSource;
-    
+
     public async Task<bool> AddUserAsync(User user, CancellationToken cancellationToken)
     {
         const string sql = """
@@ -16,14 +17,15 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
                            values (:name, :password, :role)
                            on conflict(user_name) do nothing;
                            """;
-        
+
         await using NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.Add(new NpgsqlParameter("name", NpgsqlDbType.Text) { Value = user.Name });
         command.Parameters.Add(new NpgsqlParameter("phone", NpgsqlDbType.Text) { Value = user.Password });
         command.Parameters.Add(new NpgsqlParameter("role", "account_role") { Value = user.Role });
-        
-        var result = await command.ExecuteNonQueryAsync(cancellationToken);
+
+        int result = await command.ExecuteNonQueryAsync(cancellationToken);
+
         // Если пользователь добавлен, возвращает true, в противном случае произошел конфликт первичных ключей
         return result > 0;
     }
@@ -36,13 +38,13 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
                            users_role=:role
                            where (user_name=:name);
                            """;
-        
+
         await using NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.Add(new NpgsqlParameter("name", NpgsqlDbType.Text) { Value = user.Name });
         command.Parameters.Add(new NpgsqlParameter("phone", NpgsqlDbType.Text) { Value = user.Password });
         command.Parameters.Add(new NpgsqlParameter("role", "user_role") { Value = user.Role });
-        
+
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
@@ -52,20 +54,22 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
                            select * from accounts 
                            where (:user = user_name)
                            """;
-        
+
         await using NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.Add(new NpgsqlParameter("account_id", NpgsqlDbType.Bigint)
         {
-            Value = name
+            Value = name,
         });
 
-        var reader = await command.ExecuteReaderAsync(cancellationToken);
-        
+        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+
         await reader.ReadAsync(cancellationToken);
-        return new User(
-            reader.GetString(0),
-            reader.GetString(1),
-            reader.GetFieldValue<UserRole>(2));
+        return new User
+        {
+            Name = reader.GetString(0),
+            Password = reader.GetString(1),
+            Role = await reader.GetFieldValueAsync<UserRole>(2, cancellationToken),
+        };
     }
 }
