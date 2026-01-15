@@ -7,6 +7,15 @@ option csharp_namespace = "AccountMaster.Grpc";
 
 service AccountService {
   rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+  rpc CheckBanStatus(CheckBanStatusRequest) returns (CheckBanStatusResponse);
+}
+
+message CheckBanStatusRequest {
+  int64 account_id = 1;
+}
+
+message CheckBanStatusResponse {
+  bool is_banned = 1;
 }
 
 message GetAccountRequest {
