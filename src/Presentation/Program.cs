@@ -28,4 +28,6 @@ builder.Services
 
 WebApplication app = builder.Build();
 
+app.MapControllers();
+
 app.Run();
