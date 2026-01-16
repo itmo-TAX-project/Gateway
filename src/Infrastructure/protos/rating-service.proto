@@ -1,0 +1,23 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "RatingService.Api.Grpc";
+
+package rating;
+
+service RatingService {
+  rpc GetRating(GetRatingRequest) returns (GetRatingResponse);
+}
+
+message RatingAggregate {
+  int64 subject_id = 1;
+  double avg = 2;
+  int64 count = 3;
+}
+
+message GetRatingRequest {
+  int64 subject_id = 1;
+}
+
+message GetRatingResponse {
+  RatingAggregate aggregate = 1;
+}
