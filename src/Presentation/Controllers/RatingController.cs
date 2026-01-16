@@ -16,9 +16,9 @@ public class RatingController : ControllerBase
     }
 
     [HttpPost("ratings")]
-    public async Task<ActionResult> RegisterPassengerAsync(PostRatingRequest request)
+    public async Task<ActionResult> RegisterPassengerAsync(PostRatingRequest request, CancellationToken token)
     {
-        await _service.PostRatingAsync(request.SubjectType, request.SubjectId, request.RaterId, request.Stars, request.Comment, CancellationToken.None);
+        await _service.PostRatingAsync(request.SubjectType, request.SubjectId, request.RaterId, request.Stars, request.Comment, token);
         return Ok();
     }
 }
