@@ -1,3 +1,3 @@
 ﻿namespace Presentation.Dto.Users;
 
-public record RegisterDriverRequest(string Name, string Phone, string Password);
+public record RegisterDriverRequest(string Name, string Phone, string Password, string LicenseNumber);

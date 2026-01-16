@@ -10,7 +10,7 @@ namespace Presentation.Extensions;
 
 public static class GrpcPresentationLayerExtensions
 {
-    public static IServiceCollection AddPresentation(this IServiceCollection services)
+    public static IServiceCollection AddGrpcPresentation(this IServiceCollection services)
     {
         services.AddSingleton<ErrorHandlerInterceptor>();
         services.AddGrpc(options => options.Interceptors.Add<ErrorHandlerInterceptor>());

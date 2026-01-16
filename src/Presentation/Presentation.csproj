@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageVersion Include="Grpc.AspNetCore" />
-        <PackageVersion Include="Grpc.Core" />
+        <PackageReference Include="Grpc.AspNetCore" />
+        <PackageReference Include="Grpc.Core" />
         <PackageReference Include="Google.Api.CommonProtos" />
         <PackageReference Include="Google.Api.Gax.Grpc" />
         <PackageReference Include="Google.Protobuf" />
@@ -36,6 +36,12 @@
     
     <ItemGroup>
       <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

@@ -8,6 +8,6 @@ public class UserRoleMappingPlugin : IPostgresDataSourcePlugin
 {
     public void Configure(NpgsqlDataSourceBuilder dataSource)
     {
-        dataSource.MapEnum<UserRole>("user_role");
+        dataSource.MapEnum<UserRole>("user_roles");
     }
 }

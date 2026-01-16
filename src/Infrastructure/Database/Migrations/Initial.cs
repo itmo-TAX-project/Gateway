@@ -7,17 +7,17 @@ public class Initial : Migration
 {
     public override void Up()
     {
-        Execute.Sql(@"CREATE TYPE role AS ENUM ('passenger', 'driver', 'admin');");
+        Execute.Sql(@"CREATE TYPE user_roles AS ENUM ('passenger', 'driver', 'admin');");
 
         Create.Table("users")
             .WithColumn("user_name").AsString().PrimaryKey()
             .WithColumn("user_password").AsString().NotNullable()
-            .WithColumn("user_role").AsCustom("role").NotNullable();
+            .WithColumn("user_role").AsCustom("user_roles").NotNullable();
     }
 
     public override void Down()
     {
         Delete.Table("users");
-        Execute.Sql("DROP TYPE IF EXISTS role;");
+        Execute.Sql("DROP TYPE IF EXISTS user_roles;");
     }
 }

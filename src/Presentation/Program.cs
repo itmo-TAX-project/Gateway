@@ -1,6 +1,7 @@
 ﻿using Application.Extensions;
 using Infrastructure.Database.Options;
 using Infrastructure.Extensions;
+using Infrastructure.Security.JwtGenerators.Options;
 using Itmo.Dev.Platform.Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -9,8 +10,9 @@ using Presentation.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddJsonFile("appsettings.json");
 
+builder.Services.Configure<JwtGeneratorOptions>(builder.Configuration.GetSection(JwtGeneratorOptions.SectionName));
 builder.Services.Configure<DatabaseConfigOptions>(builder.Configuration.GetSection("Postgres"));
 
 builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
@@ -24,8 +26,11 @@ builder.Services.AddPlatform();
 builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
-    .AddPresentation();
+    .AddGrpcPresentation()
+    .AddMvcPresentation();
 
 WebApplication app = builder.Build();
+
+app.MapControllers();
 
 app.Run();

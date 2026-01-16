@@ -17,31 +17,31 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register/passenger")]
-    public async Task<ActionResult> RegisterPassengerAsync(RegisterPassengerRequest request)
+    public async Task<ActionResult> RegisterPassengerAsync(RegisterPassengerRequest request, CancellationToken token)
     {
-        bool response = await _userService.RegisterPassengerAsync(request.Name, request.Phone, request.Password, default);
+        bool response = await _userService.RegisterPassengerAsync(request.Name, request.Phone, request.Password, token);
         return Ok(response);
     }
 
     [HttpPost("register/driver")]
-    public async Task<ActionResult> RegisterDriverAsync(RegisterPassengerRequest request)
+    public async Task<ActionResult> RegisterDriverAsync(RegisterDriverRequest request, CancellationToken token)
     {
-        bool response = await _userService.RegisterDriverAsync(request.Name, request.Phone, request.Password, request.LicenseNumber, default);
+        bool response = await _userService.RegisterDriverAsync(request.Name, request.Phone, request.Password, request.LicenseNumber, token);
         return Ok(response);
     }
 
     [Authorize(Roles = "Admin")]
     [HttpPost("register/admin")]
-    public async Task<ActionResult> RegisterAdminAsync(RegisterAdminRequest registerRequest)
+    public async Task<ActionResult> RegisterAdminAsync(RegisterAdminRequest registerRequest, CancellationToken token)
     {
-        bool response = await _userService.RegisterAdminAsync(registerRequest.Name, registerRequest.Phone, registerRequest.Password, default);
+        bool response = await _userService.RegisterAdminAsync(registerRequest.Name, registerRequest.Phone, registerRequest.Password, token);
         return Ok(response);
     }
 
     [HttpGet("login")]
-    public async Task<ActionResult<string>> Login(AuthRequest request)
+    public async Task<ActionResult<string>> Login(AuthRequest request, CancellationToken token)
     {
-        string response = await _userService.LoginAsync(request.Name, request.Password, default);
+        string response = await _userService.LoginAsync(request.Name, request.Password, token);
         return response;
     }
 }
