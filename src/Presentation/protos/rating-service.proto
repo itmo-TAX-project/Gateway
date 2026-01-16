@@ -5,28 +5,19 @@ option csharp_namespace = "RatingService.Api.Grpc";
 package rating;
 
 service RatingService {
-  rpc AddRating(AddRatingRequest) returns (AddRatingResponse);
+  rpc GetRating(GetRatingRequest) returns (GetRatingResponse);
 }
 
-enum SubjectType {
-  DRIVER = 0;
-  PASSENGER = 1;
-  UNKNOWN = 2;
-}
-
-message Rating {
+message RatingAggregate {
   int64 subject_id = 1;
-  int64 stars = 2;
+  string avg = 2;
+  int64 count = 3;
 }
 
-message AddRatingRequest {
-  SubjectType subject_type = 1;
-  int64 subject_id = 2;
-  int64 rater_id = 3;
-  int32 stars = 4;
-  string comment = 5;
+message GetRatingRequest {
+  int64 subject_id = 1;
 }
 
-message AddRatingResponse {
-  int64 id = 1;
+message GetRatingResponse {
+  RatingAggregate aggregate = 1;
 }
