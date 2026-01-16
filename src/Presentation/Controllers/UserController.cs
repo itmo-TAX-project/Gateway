@@ -24,7 +24,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register/driver")]
-    public async Task<ActionResult> RegisterDriverAsync(RegisterPassengerRequest request)
+    public async Task<ActionResult> RegisterDriverAsync(RegisterDriverRequest request)
     {
         bool response = await _userService.RegisterDriverAsync(request.Name, request.Phone, request.Password, request.LicenseNumber, default);
         return Ok(response);

@@ -18,6 +18,7 @@ public static class KafkaExtensions
         collection
             .AddAccountCreatedProducer(configuration)
             .AddRatingPostedProducer(configuration)
+            .AddScoped<IUserProducer, UserProducer>()
             .AddScoped<IRatingProducer, RatingProducer>();
 
         return collection;
@@ -56,12 +57,12 @@ public static class KafkaExtensions
     {
         return collection.AddPlatformKafka(builder => builder
             .ConfigureOptions(configuration.GetSection("Kafka"))
-        .AddProducer(p => p
-            .WithKey<RatingPostedMessageKey>()
-            .WithValue<RatingPostedMessageValue>()
-            .WithConfiguration(configuration.GetSection("Kafka:Producers:RatingPostedMessage"))
-            .SerializeKeyWithNewtonsoft()
-            .SerializeValueWithNewtonsoft()
-            .WithOutbox()));
+            .AddProducer(p => p
+                .WithKey<RatingPostedMessageKey>()
+                .WithValue<RatingPostedMessageValue>()
+                .WithConfiguration(configuration.GetSection("Kafka:Producers:RatingPostedMessage"))
+                .SerializeKeyWithNewtonsoft()
+                .SerializeValueWithNewtonsoft()
+                .WithOutbox()));
     }
 }
