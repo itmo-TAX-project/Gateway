@@ -2,7 +2,7 @@ using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System.Security.Authentication;
 
-namespace Presentation.Grpc.Interceptors;
+namespace Infrastructure.Grpc.Interceptors;
 
 public class ErrorHandlerInterceptor : Interceptor
 {

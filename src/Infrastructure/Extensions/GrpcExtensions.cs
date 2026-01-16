@@ -1,14 +1,16 @@
 ﻿using AccountMaster.Grpc;
 using AdminMaster.Grpc;
+using Application.Contracts;
+using Infrastructure.Grpc.Interceptors;
+using Infrastructure.Grpc.Services;
 using Microsoft.Extensions.DependencyInjection;
 using PassengerMaster.Grpc;
-using Presentation.Grpc.Interceptors;
 using Rides.RideService.Contracts;
 using TaxiMaster.Grpc;
 
-namespace Presentation.Extensions;
+namespace Infrastructure.Extensions;
 
-public static class GrpcPresentationLayerExtensions
+public static class GrpcExtensions
 {
     public static IServiceCollection AddGrpcPresentation(this IServiceCollection services)
     {
@@ -19,9 +21,10 @@ public static class GrpcPresentationLayerExtensions
         services.AddGrpcClient<PassengerService.PassengerServiceClient>();
         services.AddGrpcClient<TaxiService.TaxiServiceClient>();
         services.AddGrpcClient<AdminService.AdminServiceClient>();
-        services.AddGrpcClient<RatingService.Api.Grpc.RatingService.RatingServiceClient>();
+        services.AddGrpcClient<RatingService.Api.Grpc.RatingService.RatingServiceClient>(o => o.Address = new Uri("http://localhost:8021"));
         services.AddGrpcClient<RideService.RideServiceClient>();
-        services.AddGrpcClient<RideService.RideServiceClient>();
+
+        services.AddScoped<IRatingClient, GrpcRatingService>();
 
         return services;
     }

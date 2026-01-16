@@ -1,6 +1,8 @@
 ﻿using Application.Contracts;
+using Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Dto.Rating;
+using System.Net;
 
 namespace Presentation.Controllers;
 
@@ -16,9 +18,16 @@ public class RatingController : ControllerBase
     }
 
     [HttpPost("ratings")]
-    public async Task<ActionResult> RegisterPassengerAsync(PostRatingRequest request, CancellationToken token)
+    public async Task<ActionResult> PostRatingAsync(PostRatingRequest request, CancellationToken token)
     {
         await _service.PostRatingAsync(request.SubjectType, request.SubjectId, request.RaterId, request.Stars, request.Comment, token);
-        return Ok();
+        return Ok(HttpStatusCode.OK);
+    }
+
+    [HttpGet("ratings/{subjectId}")]
+    public async Task<ActionResult> GetRatingAsync(long subjectId, CancellationToken token)
+    {
+        RatingAggregate agg = await _service.GetRatingAsync(subjectId, token);
+        return Ok(agg);
     }
 }

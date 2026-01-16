@@ -7,10 +7,12 @@ namespace Application.Services;
 public class RatingService : IRatingService
 {
     private readonly IRatingProducer _producer;
+    private readonly IRatingClient _client;
 
-    public RatingService(IRatingProducer producer)
+    public RatingService(IRatingProducer producer, IRatingClient client)
     {
         _producer = producer;
+        _client = client;
     }
 
     public async Task PostRatingAsync(
@@ -31,5 +33,13 @@ public class RatingService : IRatingService
         };
 
         await _producer.ProduceRatingAsync(rating, token);
+    }
+
+    public async Task<RatingAggregate> GetRatingAsync(
+        long subjectId,
+        CancellationToken token)
+    {
+        RatingAggregate agg = await _client.GetRatingAsync(subjectId, token);
+        return agg;
     }
 }

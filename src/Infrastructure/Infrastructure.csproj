@@ -13,6 +13,16 @@
     <ItemGroup>
       <PackageReference Include="FluentMigrator" />
       <PackageReference Include="FluentMigrator.Runner" />
+      <PackageReference Include="Grpc.AspNetCore" />
+      <PackageReference Include="Grpc.AspNetCore.Server.Reflection" />
+      <PackageReference Include="Grpc.AspNetCore.Web" />
+      <PackageReference Include="Grpc.Core" />
+      <PackageReference Include="Grpc.Net.Client" />
+      <PackageReference Include="Grpc.Net.ClientFactory" />
+      <PackageReference Include="Grpc.Tools">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Itmo.Dev.Platform.Kafka" />
       <PackageReference Include="Itmo.Dev.Platform.MessagePersistence" />
       <PackageReference Include="Itmo.Dev.Platform.MessagePersistence.Postgres" />
@@ -22,6 +32,10 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
       <PackageReference Include="Npgsql" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf ProtoRoot="protos" Include="protos\**\*.proto" GrpcServices="Client" />
     </ItemGroup>
 
 </Project>
