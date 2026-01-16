@@ -21,8 +21,8 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
         await using NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.Add(new NpgsqlParameter("name", NpgsqlDbType.Text) { Value = user.Name });
-        command.Parameters.Add(new NpgsqlParameter("phone", NpgsqlDbType.Text) { Value = user.Password });
-        command.Parameters.Add(new NpgsqlParameter("role", "account_role") { Value = user.Role });
+        command.Parameters.Add(new NpgsqlParameter("password", NpgsqlDbType.Text) { Value = user.Password });
+        command.Parameters.Add(new NpgsqlParameter("role", "user_roles") { Value = user.Role });
 
         int result = await command.ExecuteNonQueryAsync(cancellationToken);
 
@@ -34,7 +34,7 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
     {
         const string sql = """
                            update users set
-                           users_password=:phone,
+                           users_password=:password
                            users_role=:role
                            where (user_name=:name);
                            """;
@@ -42,8 +42,8 @@ public class UserRepository(NpgsqlDataSource dataSource) : IUserRepository
         await using NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.Add(new NpgsqlParameter("name", NpgsqlDbType.Text) { Value = user.Name });
-        command.Parameters.Add(new NpgsqlParameter("phone", NpgsqlDbType.Text) { Value = user.Password });
-        command.Parameters.Add(new NpgsqlParameter("role", "user_role") { Value = user.Role });
+        command.Parameters.Add(new NpgsqlParameter("password", NpgsqlDbType.Text) { Value = user.Password });
+        command.Parameters.Add(new NpgsqlParameter("role", "user_roles") { Value = user.Role });
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
