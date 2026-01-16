@@ -4,14 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using PassengerMaster.Grpc;
 using Presentation.Grpc.Interceptors;
 using Rides.RideService.Contracts;
-using System.Text.Json.Serialization;
 using TaxiMaster.Grpc;
 
 namespace Presentation.Extensions;
 
 public static class GrpcPresentationLayerExtensions
 {
-    public static IServiceCollection AddPresentation(this IServiceCollection services)
+    public static IServiceCollection AddGrpcPresentation(this IServiceCollection services)
     {
         services.AddSingleton<ErrorHandlerInterceptor>();
         services.AddGrpc(options => options.Interceptors.Add<ErrorHandlerInterceptor>());
@@ -23,12 +22,6 @@ public static class GrpcPresentationLayerExtensions
         services.AddGrpcClient<RatingService.Api.Grpc.RatingService.RatingServiceClient>();
         services.AddGrpcClient<RideService.RideServiceClient>();
         services.AddGrpcClient<RideService.RideServiceClient>();
-
-        services.AddControllers()
-            .AddJsonOptions(o =>
-            {
-                o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
 
         return services;
     }

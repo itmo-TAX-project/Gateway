@@ -26,7 +26,8 @@ builder.Services.AddPlatform();
 builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication()
-    .AddPresentation();
+    .AddGrpcPresentation()
+    .AddMvcPresentation();
 
 WebApplication app = builder.Build();
 
