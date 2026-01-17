@@ -7,8 +7,7 @@ option csharp_namespace = "AdminMaster.Grpc";
 service AdminService {
   rpc BanAccount(BanAccountRequest) returns (BanAccountResponse);
   rpc UnbanAccount(UnbanAccountRequest) returns (UnbanAccountResponse);
-  rpc ApproveRefund(ApproveRefundRequest) returns (ApproveRefundResponse);
-  rpc RejectRefund(RejectRefundRequest) returns (RejectRefundResponse);
+  rpc MakeRefund(MakeRefundRequest) returns (MakeRefundResponse);
 }
 
 message BanAccountRequest {
@@ -27,18 +26,10 @@ message UnbanAccountRequest {
 message UnbanAccountResponse {
 }
 
-message ApproveRefundRequest {
-  int64 refund_request_id = 1;
+message MakeRefundRequest {
+  int64 ride_id = 1;
   int64 created_by_admin_id = 2;
 }
 
-message ApproveRefundResponse {
-}
-
-message RejectRefundRequest {
-  int64 refund_request_id = 1;
-  int64 created_by_admin_id = 2;
-}
-
-message RejectRefundResponse {
+message MakeRefundResponse {
 }
