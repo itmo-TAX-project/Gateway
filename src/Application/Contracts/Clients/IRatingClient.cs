@@ -1,6 +1,6 @@
 ﻿using Application.Models;
 
-namespace Application.Contracts;
+namespace Application.Contracts.Clients;
 
 public interface IRatingClient
 {

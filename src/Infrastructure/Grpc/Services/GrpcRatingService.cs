@@ -1,4 +1,4 @@
-﻿using Application.Contracts;
+﻿using Application.Contracts.Clients;
 using RatingService.Api.Grpc;
 using RatingAggregate = Application.Models.RatingAggregate;
 
